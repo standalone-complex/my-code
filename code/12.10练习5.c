@@ -25,6 +25,6 @@ int main()
             c = 0;
         }
     }
-    printf("%d", cc);
+    printf("%d", cc + 1);
     return 0;
 }
