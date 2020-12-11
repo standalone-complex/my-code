@@ -27,17 +27,17 @@ int main()
 
     for(i=0; i<t; i++)
     {
-        if(fabs(p->a-p->b)>180)
+        if(fabs(p[i].a-p[i].b)>180)
         {
-            p->x = 360 - fabs(p->a-p->b);
+            p[i].x = 360 - fabs(p[i].a-p[i].b);
         }
         else
         {
-            p->x = fabs(p->a-p->b);
+            p[i].x = fabs(p[i].a-p[i].b);
         }
-        p->y = (p->x * PI / 180) * p->r;
-        p->distance = p->y * p->y + p->h * p->h;
-        printf("%.2lf", p->distance);
+        p[i].y = (p[i].x * PI / 180) * p[i].r;
+        p[i].distance = p[i].y * p[i].y + p[i].h * p[i].h;
+        printf("%.2lf", p[i].distance);
     }
 /*    while (t>0)
     {
