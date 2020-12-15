@@ -7,16 +7,12 @@ int main()
 {
     double eps;
     int i = 0;
-    //printf("%d %d %lf", f(2), g(2), f(2)*1.0/g(2));
     double s  = 1, ss = 0;
     scanf("%le", &eps);
     while(s>=eps)
     {   
-        //printf("%%\n");
         s = (f(i)) * 1.0 / (g(i));
-
         ss += s;
-        printf("%lf ", s);
         i++;
     }
     printf("PI = %.5lf", ss);
