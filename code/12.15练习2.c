@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-int f(int);
-int g(int);
+double f(int);
+double g(int);
 
 int main()
 {
@@ -12,14 +12,15 @@ int main()
     while(s>=eps)
     {   
         s = (f(i)) * 1.0 / (g(i));
+        printf("%lf %lf %lf ", f(i), g(i), s);
         ss += s;
         i++;
     }
-    printf("PI = %.5lf", ss);
+    printf("PI = %.5lf", ss * 2);
     return 0;
 }
 
-int f(int n)//阶乘
+double f(int n)//阶乘
 {
     if(n==0)
     {
@@ -28,7 +29,7 @@ int f(int n)//阶乘
     return (n * f(n-1));
 }
 
-int g(int n)//
+double g(int n)//
 {
     if(n==0)
     {
