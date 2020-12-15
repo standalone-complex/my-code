@@ -16,8 +16,8 @@ PNODE reverse_list2(PNODE);//递归
 int main()
 {
     PNODE pHead = create_list();
-    reverse_list1(pHead);
-    //reverse_list2(pHead);
+    //reverse_list1(pHead);
+    pHead = reverse_list2(pHead);
     output_list(pHead);
     return 0;
 }
@@ -85,9 +85,12 @@ PNODE reverse_list2(PNODE ph)
     {
         return ph;
     }
-    PNODE cur = reverse_list2(ph->pNext);
-    ph->pNext->pNext = ph;
-    ph->pNext == NULL;
-
-    return cur;
+    else
+    {
+        PNODE cur = reverse_list2(ph->pNext);
+        ph->pNext->pNext = ph;
+        ph->pNext = NULL;
+        return cur;
+    }
+    
 }
