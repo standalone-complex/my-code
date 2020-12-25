@@ -123,5 +123,19 @@ void printdigits(int n)
 
 int search(int n)
 {
-    
+    int x, temp, s = 0;
+    int a, b, c;
+    while(temp>=121)
+    {
+        x = sqrt(temp);
+        a = temp / 100;
+        b = (temp/10) % 10;
+        c = temp % 10;
+        if((x*x==temp)&&(a==b||a==c||b==c))
+        {   
+            s++;
+        }
+        temp--;
+    }
+    return s;
 }
