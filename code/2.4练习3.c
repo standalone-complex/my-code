@@ -1,9 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include "myfunctions.h"
 
 int main(void)
 {
-    double age;
-    scanf("%lf", &age);
-    printf("%lf", 3.156e7*age);
+    PTYF pHead = CreateList();
     return 0;
 }
