@@ -25,7 +25,7 @@ PTYF List_Create(void)//有头结点的单链表
         {
             exit(-1);
         }
-        printf("请输入该节点的值：");
+        printf("请输入第%d个节点的值：", i+1);
         scanf("%d", &val);
         pNew->data = val;//为啥不直接scanf给pNew->data呢
         pTail->pNext = pNew;
@@ -43,7 +43,7 @@ void List_HeadAdd(PTYF pHead)
     scanf("%d", &n);
     for(i=0; i<n; i++)
     {
-        pNew = (PTYF)malloc(sizeof(PTY));
+        pNew = (PTYF)malloc(sizeof(TYF));
         if(pNew==NULL)
         {
             exit(-1);
@@ -87,11 +87,21 @@ void List_TailAdd(PTYF pHead)
 void List_Output(PTYF pHead)
 {
     PTYF p = pHead->pNext;
-    if(p!=NULL)
+    int c = 0;
+    while(p!=NULL)
     {
-        printf("%d", p->data);
+        if(c==0)
+        {
+            printf("%d", p->data);
+        }
+        else
+        {
+            printf(" %d", p->data);
+        }
+        c++;
         p = p->pNext;
     }
+    printf("\n");
     return;
 }
 
@@ -117,12 +127,12 @@ void List_Delete_2(PTYF pHead, int key)//删所有值为key的
 //整个双指针
     PTYF pb = pHead;
     PTYF pf = pHead->pNext;
-    while(pf!=NULL&&pb->pNext!=NULL)
+    while(pf!=NULL)
     {
         if(pf->data==key)
         {   
             pf = pf->pNext;
-            pb = pf;
+            pb->pNext = pf;
         }
         else
         {
@@ -132,5 +142,22 @@ void List_Delete_2(PTYF pHead, int key)//删所有值为key的
     }
     return;
 }
+
+
+bool List_Change(PTYF pHead, int pos, int val)
+{
+    int i = 0;
+    PTYF p = pHead;
+    while(p->pNext != NULL&&i<pos-1)
+    {
+        p = p->pNext;
+        i++;
+    }
+    if(i>pos-1||p->pNext==NULL)
+        return false;
+    p->data = val;
+    return;
+}
+
 
 #endif
