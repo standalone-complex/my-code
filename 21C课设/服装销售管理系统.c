@@ -39,16 +39,39 @@ int main(int argc, char * argv[])
     //需要的变量
     FILE* fp;
     PASMS pHead;
-    int n, loop_1, loop_2;
+    int judge, n, loop_1, loop_2, c;
     char temp[20];
     //打开文件
     fp = fopen("./21C课设/data.txt", "a+");
     pHead = create_list(fp);
     printf("录入1，排序2，遍历3，查询4，删除5，修改6,结束7\n请输入：___\b\b");//后期用函数替换
-    scanf("%d", &n);
+    /* scanf("%d", &n);
     while(n<=0||n>=8)
     {
+        fflush(stdin);
         printf("请重新输入：___\b\b");
+        scanf("%d", &n);
+    } */
+    while(1)
+    {
+        judge = scanf("%d", &n);
+        if(judge!=1)
+        {
+            //清除缓冲区（fflush没用）
+            while((c = getchar()) != '\n' && c != EOF);
+            printf("输入格式错误！，请重新输入：___\b\b");
+        }
+        else
+        {
+            if(n<=0||n>=8)
+            {
+                printf("输入范围错误！，请重新输入：___\b\b");
+            }
+            else
+            {
+                break;
+            }
+        }
     }
     while(1)
     {
@@ -57,8 +80,28 @@ int main(int argc, char * argv[])
             case(1):
             {
                 printf("请输入录入服装的数量：___\b\b");
-                scanf("%d", &loop_2);
-                printf("\n");
+                //scanf("%d", &loop_2);
+                while(1)
+                {
+                    judge = scanf("%d", &loop_2);
+                    if(judge!=1)
+                    {
+                        //清除缓冲区（fflush没用）
+                        while((c = getchar()) != '\n' && c != EOF);
+                        printf("输入格式错误！，请重新输入：___\b\b");
+                    }
+                    else
+                    {
+                        if(loop_2<0)
+                        {
+                            printf("输入范围错误！，请重新输入：___\b\b");
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
                 for(loop_1=0; loop_1<loop_2; loop_1++)
                 {   
                     if(loop_1==0)
@@ -73,15 +116,29 @@ int main(int argc, char * argv[])
             case(2):
             {
                 //按代码排序，实现顺序逆序两种功能
-                printf("顺序1，逆序2，其他返回，请输入：___\b\b");
-                scanf("%d", &n);
+                printf("升序1，降序2，其他数字返回，请输入：___\b\b");
+                //scanf("%d", &n);
+                while(1)
+                {
+                    judge = scanf("%d", &n);
+                    if(judge!=1)
+                    {
+                        //清除缓冲区（fflush没用）
+                        while((c = getchar()) != '\n' && c != EOF);
+                        printf("输入格式错误！，请重新输入：___\b\b");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
                 if(n==1)
                 {
-
+                    List_BubbleSort_Rise(pHead);
                 }
                 else if(n==2)
                 {
-
+                    List_BubbleSort_Drop(pHead);
                 }
                 break;
             }
@@ -119,7 +176,26 @@ int main(int argc, char * argv[])
             }
         }
         printf("录入1，排序2，遍历3，查询4，删除5，修改6,结束7\n请输入：___\b\b");
-        scanf("%d", &n);
+        while(1)
+        {   
+            judge = scanf("%d", &n);
+            if(judge!=1)
+            {
+                fflush(stdin);
+                printf("输入格式错误！，请重新输入：___\b\b");
+            }
+            else
+            {
+                if(n<=0||n>=8)
+                {
+                    printf("输入范围错误！，请重新输入：___\b\b");
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
     }
 
     return 0;
@@ -129,6 +205,7 @@ PASMS create_list(FILE* fp)
 {
     char ch;
     PASMS pNew;
+    PASMS pTail;
     //整个头结点
     PASMS ph = (PASMS)malloc(sizeof(ASMS));
     if(ph==NULL)
@@ -136,6 +213,7 @@ PASMS create_list(FILE* fp)
         exit(-1);
     }
     ph->pNext = NULL;
+    pTail = ph;
     //如果文件不为空
     while(ch=getc(fp)!=EOF)
     {
@@ -146,10 +224,11 @@ PASMS create_list(FILE* fp)
         }
         fscanf(fp, "%s%s%s%s%s%s%s%s%s%s", pNew->brand, pNew->color, pNew->identifier, pNew->material, pNew->name, pNew->package, pNew->size, pNew->style, pNew->supplier, pNew->amount);
         //品牌，颜色，代码，面料，名称，包装方式，尺码，款式，供应商, 库存数量(注意读进去的时候顺序要一样)
-        //头插
-        pNew->pNext = ph->pNext;
-        ph->pNext = pNew;
+        //尾插
+        pTail->pNext = pNew;
+        pTail = pTail->pNext;
     }
+    pTail->pNext = NULL;
     return ph;
 }
 
@@ -202,16 +281,44 @@ void sentback(FILE* fp, PASMS ph)
 
 void search(PASMS ph)
 {
-    int n;
+    int n, judge, c;
     char temp_1[20];
     char temp_2[20];
-    printf("单项查询1，混合查询2，其他任意键退出\n请输入：___\b\b");
-    scanf("%d", &n);
+    printf("单项查询1，混合查询2，其他数字退出\n请输入：___\b\b");
+    //scanf("%d", &n);
+    while(1)
+    {
+        judge = scanf("%d", &n);
+        if(judge!=1)
+        {
+            //清除缓冲区（fflush没用）
+            while((c = getchar()) != '\n' && c != EOF);
+            printf("输入格式错误！，请重新输入：___\b\b");
+        }
+        else
+        {
+            break;
+        }
+    }
     if(n==1)
     {
         //查代码，查品牌，查款式，查名称
-        printf("查代码1，查款式2，查名称3，查供应商4，其他任意键退出\n请输入：___\b\b");
-        scanf("%d", &n);
+        printf("查代码1，查款式2，查名称3，查供应商4，其他数字退出\n请输入：___\b\b");
+        //scanf("%d", &n);
+        while(1)
+        {
+            judge = scanf("%d", &n);
+            if(judge!=1)
+            {
+                //清除缓冲区（fflush没用）
+                while((c = getchar()) != '\n' && c != EOF);
+                printf("输入格式错误！，请重新输入：___\b\b");
+            }
+            else
+            {
+                break;
+            }
+        }
         if(n==1)
         {
             printf("请输入服装代码：_________\b\b\b\b");
@@ -495,6 +602,7 @@ int  List_Len(PASMS ph)
     while(pc!=NULL)
     {
         i++;
+        pc = pc->pNext;
     }
     return i;
 }

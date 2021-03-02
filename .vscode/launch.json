@@ -19,7 +19,7 @@
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": false,
+            "externalConsole": false,//ture为外置的终端显示
             "MIMode": "gdb",
             "setupCommands": [
                 {
