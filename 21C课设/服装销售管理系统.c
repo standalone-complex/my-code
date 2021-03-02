@@ -28,6 +28,9 @@ void search_1_supplier(PASMS, char*);
 void search_2_size_style(PASMS, char*, char*);
 void change(PASMS, char*);
 void delete_1(PASMS, char*);
+void List_BubbleSort_Rise(PASMS);
+void List_BubbleSort_Drop(PASMS);
+int List_Len(PASMS);
 
 int main(int argc, char * argv[])
 {
@@ -70,6 +73,16 @@ int main(int argc, char * argv[])
             case(2):
             {
                 //按代码排序，实现顺序逆序两种功能
+                printf("顺序1，逆序2，其他返回，请输入：___\b\b");
+                scanf("%d", &n);
+                if(n==1)
+                {
+
+                }
+                else if(n==2)
+                {
+
+                }
                 break;
             }
             case(3):
@@ -394,4 +407,94 @@ void delete_1(PASMS ph, char* identifier)
     }
     printf("无此服装数据！\n");
     return;
+}
+
+void List_BubbleSort_Rise(PASMS ph)
+{
+    int len = List_Len(ph);
+    int loop_1, loop_2;
+    if(len<2)
+    {
+        printf("排序完成！\n");
+        return;
+    }
+    else
+    {
+        PASMS pf, pm, pb;
+        for(loop_1=0; loop_1<len-1; loop_1++)//这里的循环变量与链表无关
+        {
+            pf = ph;
+            pm = pf->pNext;
+            pb = pm->pNext;
+            for(loop_2=0; loop_2<len-1-loop_1; loop_2++)
+            {
+                if(strcmp(pm->amount,pb->amount)>0)//升序，
+                {
+                    //指针域交换
+                    pf->pNext = pm->pNext;
+                    pm->pNext = pb->pNext;
+                    pb->pNext =pm; 
+                    //数据域交换
+                    pm = pf->pNext;
+                    pb = pf->pNext->pNext;
+                }
+                pf = pf->pNext;
+                pm = pm->pNext;
+                pb = pb->pNext;
+            }
+        }
+        printf("排序完成！\n");
+        return;
+    }
+}
+
+void List_BubbleSort_Drop(PASMS ph)
+{
+    int len = List_Len(ph);
+    int loop_1, loop_2;
+    if(len<2)
+    {
+        printf("排序完成！\n");
+        return;
+    }
+    else
+    {
+        PASMS pf, pm, pb;
+        for(loop_1=0; loop_1<len-1; loop_1++)//这里的循环变量与链表无关
+        {
+            pf = ph;
+            pm = pf->pNext;
+            pb = pm->pNext;
+            for(loop_2=0; loop_2<len-1-loop_1; loop_2++)
+            {
+                if(strcmp(pm->amount,pb->amount)<0)//降序，
+                {
+                    //指针域交换(这三行用函数应该也行，属于指针操作，但接下来两行就不行了)
+                    pf->pNext = pm->pNext;
+                    pm->pNext = pb->pNext;
+                    pb->pNext =pm; 
+                    //数据域交换
+                    pm = pf->pNext;
+                    pb = pf->pNext->pNext;
+                }
+                pf = pf->pNext;
+                pm = pm->pNext;
+                pb = pb->pNext;
+            }
+        }
+        printf("排序完成！\n");
+        return;
+    }
+    return;
+}
+
+int  List_Len(PASMS ph)
+{
+    PASMS pc = ph->pNext;
+    int i = 0;
+    while(pc!=NULL)
+    {
+        i++;
+    }
+    return i;
 }
