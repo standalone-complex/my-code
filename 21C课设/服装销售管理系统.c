@@ -31,6 +31,7 @@ void delete_1(PASMS, char*);
 void List_BubbleSort_Rise(PASMS);
 void List_BubbleSort_Drop(PASMS);
 int List_Len(PASMS);
+void menu(void);
 
 int main(int argc, char * argv[])
 {
@@ -605,4 +606,10 @@ int  List_Len(PASMS ph)
         pc = pc->pNext;
     }
     return i;
+}
+
+void menu(void)
+{
+    
+    return;
 }
