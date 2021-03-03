@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 typedef struct ApparelSalesManagementSystem{
     char name[20];
@@ -31,28 +32,33 @@ void delete_1(PASMS, char*);
 void List_BubbleSort_Rise(PASMS);
 void List_BubbleSort_Drop(PASMS);
 int List_Len(PASMS);
-void menu(void);
+int menu(FILE*);
+bool sign_in(FILE*);//登录
+void sign_up(FILE*);//注册
 
 int main(int argc, char * argv[])
 {
     //书到用时方恨少...
     //流程大概是先读文件，以链表形式将数据存储在内存中，然后再对数据进行操作，最后将数据再存储在文件中。
     //需要的变量
-    FILE* fp;
+    FILE* fp, *fp_1;
     PASMS pHead;
     int judge, n, loop_1, loop_2, c;
     char temp[20];
+    fp_1 = fopen("21C课设/user.txt","a+");
+    judge = menu(fp_1);
+    if(judge==0)
+    {
+        return 0;
+    }
+    else if(n==1)
+    {
+        printf("登录成功！");
+    }
     //打开文件
     fp = fopen("./21C课设/data.txt", "a+");
     pHead = create_list(fp);
-    printf("录入1，排序2，遍历3，查询4，删除5，修改6,结束7\n请输入：___\b\b");//后期用函数替换
-    /* scanf("%d", &n);
-    while(n<=0||n>=8)
-    {
-        fflush(stdin);
-        printf("请重新输入：___\b\b");
-        scanf("%d", &n);
-    } */
+    printf("录入1，排序2，遍历3，查询4，删除5，修改6,保存并结束7\n请输入：___\b\b");//后期用函数替换
     while(1)
     {
         judge = scanf("%d", &n);
@@ -176,7 +182,7 @@ int main(int argc, char * argv[])
                 return 0;
             }
         }
-        printf("录入1，排序2，遍历3，查询4，删除5，修改6,结束7\n请输入：___\b\b");
+        printf("录入1，排序2，遍历3，查询4，删除5，修改6,保存并结束7\n请输入：___\b\b");
         while(1)
         {   
             judge = scanf("%d", &n);
@@ -241,9 +247,9 @@ void traverse_list(PASMS ph)
     {
         if(i==0)
         {
-            printf("代码 品牌 名称 颜色 尺码 款式 供应商 面料 包装方式 库存数量\n");
+            printf("代码    品牌    名称    颜色    尺码    款式    供应商  面料    包装    库存数量\n");
         }
-        printf("%s %s %s %s %s %s %s %s %s %s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
+        printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
         i++;
         pc = pc->pNext;
     }
@@ -365,10 +371,10 @@ void search_1_identifier(PASMS ph, char* identifier)
         {
             if(i==0)
             {
-                printf("代码 品牌 名称 颜色 尺码 款式 供应商 面料 包装方式 库存数量\n");
+                printf("代码    品牌    名称    颜色    尺码    款式    供应商  面料    包装    库存数量\n");
             }
             i++;
-            printf("%s %s %s %s %s %s %s %s %s %s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
+            printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
             return;
         }
         pc = pc->pNext;
@@ -387,10 +393,10 @@ void search_1_name(PASMS ph, char* name)
         {
             if(i==0)
             {
-                printf("代码 品牌 名称 颜色 尺码 款式 供应商 面料 包装方式 库存数量\n");
+                printf("代码    品牌    名称    颜色    尺码    款式    供应商  面料    包装    库存数量\n");
             }
             i++;
-            printf("%s %s %s %s %s %s %s %s %s %s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
+            printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
             return;
         }
         pc = pc->pNext;
@@ -409,10 +415,10 @@ void search_1_style(PASMS ph, char* style)
         {
             if(i==0)
             {
-                printf("代码 品牌 名称 颜色 尺码 款式 供应商 面料 包装方式 库存数量\n");
+                printf("代码    品牌    名称    颜色    尺码    款式    供应商  面料    包装    库存数量\n");
             }
             i++;
-            printf("%s %s %s %s %s %s %s %s %s %s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
+            printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
         }
         pc = pc->pNext;
     }
@@ -433,10 +439,10 @@ void search_1_supplier(PASMS ph, char* supplier)
         {
             if(i==0)
             {
-                printf("代码 品牌 名称 颜色 尺码 款式 供应商 面料 包装方式 库存数量\n");
+                printf("代码    品牌    名称    颜色    尺码    款式    供应商  面料    包装    库存数量\n");
             }
             i++;
-            printf("%s %s %s %s %s %s %s %s %s %s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
+            printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
         }
         pc = pc->pNext;
     }
@@ -457,10 +463,10 @@ void search_2_size_style(PASMS ph, char* size, char* style)
         {
             if(i==0)
             {
-                printf("代码 品牌 名称 颜色 尺码 款式 供应商 面料 包装方式 库存数量\n");
+                printf("代码    品牌    名称    颜色    尺码    款式    供应商  面料    包装    库存数量\n");
             }
             i++;
-            printf("%s %s %s %s %s %s %s %s %s %s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
+            printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
         }
     }
     if(i==0)
@@ -479,8 +485,8 @@ void change(PASMS ph, char* identifier)
         if(strcmp(pc->identifier, identifier)==0)
         {
             printf("原数据为：\n");
-            printf("代码 品牌 名称 颜色 尺码 款式 供应商 面料 包装方式 库存数量\n");
-            printf("%s %s %s %s %s %s %s %s %s %s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
+            printf("代码    品牌    名称    颜色    尺码    款式    供应商  面料    包装    库存数量\n");
+            printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
             printf("请输入修改后的数据：\n");
             printf("代码 品牌 名称 颜色 尺码 款式 供应商 面料 包装方式 库存数量\n");
             scanf("%s%s%s%s%s%s%s%s%s%s", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
@@ -608,8 +614,98 @@ int  List_Len(PASMS ph)
     return i;
 }
 
-void menu(void)
+int menu(FILE* fp)
 {
-    
+    int n, judge, c;
+    do
+    {
+        printf("——————————##########服装销售管理系统##########——————————\n");
+        printf("——————————##########服装销售管理系统##########——————————\n");
+        printf("——————————###欢迎使用服装销售管理系统，请先登录！###——————————\n");
+        printf("#菜单#\n");
+        printf("1：登录\n");
+        printf("2：注册\n");
+        printf("0：退出\n");
+        printf("****************************************************************\n");
+        printf("请输入您的操作！");
+        while(1)
+        {   
+            judge = scanf("%d", &n);
+            if(judge!=1)
+            {
+                //清除缓冲区（fflush没用）
+                while((c = getchar()) != '\n' && c != EOF);
+                printf("输入格式错误！，请重新输入！\n");
+            }
+            else
+            {
+                if(n!=1&&n!=2&&n!=0)
+                {
+                    printf("输入范围错误！，请重新输入！\n");
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        judge = 1;
+        switch(n)
+        {
+            case(1):
+            {
+                judge=sign_in(fp);
+                break;
+            }
+            case(2):
+            {
+                sign_up(fp);
+                judge = 0;
+                break;
+            }
+            default:
+            {
+                return 0;//退出
+            }
+        }
+    }while(!judge);
+    return 1;//登录成功
+}
+
+bool sign_in(FILE* fp)//登录
+{
+    char name[20], name_f[20];
+    char password[20], password_f[20];
+    printf("请输入用户名：\n");
+    scanf("%s", name);
+    printf("请输入密码：\n");
+    scanf("%s", password);
+    //这里直接遍历得了
+    int c;
+    while(c=getc(fp)!=EOF)
+    {
+        fscanf(fp, "%s%s", name_f, password_f);
+        if(strcmp(name, name_f)==0)
+        {
+            if(strcmp(password, password_f)==0)
+            {
+                printf("登录成功！\n");
+                return true;
+            }
+        }
+    }
+    printf("登录失败！\n");
+    return false;
+}
+
+void sign_up(FILE* fp)//向文件末尾添加内容
+{
+    char name[20], password[20];
+    printf("请输入用户名：\n");
+    scanf("%s", name);
+    printf("请输入密码：\n");
+    scanf("%s", password);
+    fprintf(fp, " %s %s", name, password);
+    //fflush(fp);
     return;
 }
