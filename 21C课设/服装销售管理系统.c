@@ -32,33 +32,33 @@ void delete_1(PASMS, char*);
 void List_BubbleSort_Rise(PASMS);
 void List_BubbleSort_Drop(PASMS);
 int List_Len(PASMS);
-int menu(FILE*);
-bool sign_in(FILE*);//登录
-void sign_up(FILE*);//注册
+int menu(void);
+bool sign_in(void);//登录
+void sign_up(void);//注册
 
 int main(int argc, char * argv[])
 {
     //书到用时方恨少...
     //流程大概是先读文件，以链表形式将数据存储在内存中，然后再对数据进行操作，最后将数据再存储在文件中。
     //需要的变量
-    FILE* fp, *fp_1;
+    FILE* fp;
     PASMS pHead;
     int judge, n, loop_1, loop_2, c;
     char temp[20];
-    fp_1 = fopen("21C课设/user.txt","a+");
-    judge = menu(fp_1);
+    judge = menu();
     if(judge==0)
     {
         return 0;
     }
-    else if(n==1)
-    {
-        printf("登录成功！");
-    }
+    printf("\033c");//清屏
+    printf("——————————##########登录成功!##########——————————\n\n");
+    printf("——————————##########服装销售管理系统##########——————————\n");
+    printf("——————————##########服装销售管理系统##########——————————\n");
+    printf("——————————#####欢迎使用服装销售管理系统#####——————————\n");
     //打开文件
     fp = fopen("./21C课设/data.txt", "a+");
     pHead = create_list(fp);
-    printf("录入1，排序2，遍历3，查询4，删除5，修改6,保存并结束7\n请输入：___\b\b");//后期用函数替换
+    printf("1：录入\t\t2：排序\t\t3：遍历\n4：查询\t\t5：删除\t\t6：修改\n7：保存并结束\n\n请输入：___\b\b");//后期用函数替换
     while(1)
     {
         judge = scanf("%d", &n);
@@ -118,12 +118,14 @@ int main(int argc, char * argv[])
                     add_list(pHead);
                     printf("\n");
                 }
+                printf("\033c");
+                printf("——————————##########录入完毕!##########——————————\n\n");
                 break;
             }
             case(2):
             {
                 //按代码排序，实现顺序逆序两种功能
-                printf("升序1，降序2，其他数字返回，请输入：___\b\b");
+                printf("1：升序\t\t2：降序\n其他数字返回\n请输入：___\b\b");
                 //scanf("%d", &n);
                 while(1)
                 {
@@ -142,16 +144,29 @@ int main(int argc, char * argv[])
                 if(n==1)
                 {
                     List_BubbleSort_Rise(pHead);
+                    printf("\033c");
+                    printf("——————————##########排序完成!##########——————————\n\n");
                 }
                 else if(n==2)
                 {
                     List_BubbleSort_Drop(pHead);
+                    printf("\033c");
+                    printf("——————————##########排序完成!##########——————————\n\n");
+                }
+                else
+                {
+                    printf("\033c");
                 }
                 break;
             }
             case(3):
             {
+                printf("\033c");
                 traverse_list(pHead);
+                printf("\n\n任意键返回...\n");
+                while((c = getchar()) != '\n' && c != EOF);
+                getchar();
+                printf("\033c");
                 break;
             }
             case(4):
@@ -182,7 +197,12 @@ int main(int argc, char * argv[])
                 return 0;
             }
         }
-        printf("录入1，排序2，遍历3，查询4，删除5，修改6,保存并结束7\n请输入：___\b\b");
+        //printf("录入1，排序2，遍历3，查询4，删除5，修改6,保存并结束7\n请输入：___\b\b");
+        //printf("\033c");//清屏
+        printf("——————————##########服装销售管理系统##########——————————\n");
+        printf("——————————##########服装销售管理系统##########——————————\n");
+        printf("——————————#####欢迎使用服装销售管理系统#####——————————\n");
+        printf("1：录入\t\t2：排序\t\t3：遍历\n4：查询\t\t5：删除\t\t6：修改\n7：保存并结束\n\n请输入：___\b\b");
         while(1)
         {   
             judge = scanf("%d", &n);
@@ -289,9 +309,10 @@ void sentback(FILE* fp, PASMS ph)
 void search(PASMS ph)
 {
     int n, judge, c;
+    char ch;
     char temp_1[20];
     char temp_2[20];
-    printf("单项查询1，混合查询2，其他数字退出\n请输入：___\b\b");
+    printf("1：单项查询\t\t2:混合查询\n其他数字退出\n请输入：___\b\b");
     //scanf("%d", &n);
     while(1)
     {
@@ -310,7 +331,7 @@ void search(PASMS ph)
     if(n==1)
     {
         //查代码，查品牌，查款式，查名称
-        printf("查代码1，查款式2，查名称3，查供应商4，其他数字退出\n请输入：___\b\b");
+        printf("1：查代码\t\t2：查款式\n3：查名称\t\t4：查供应商\n其他数字退出\n请输入：___\b\b");
         //scanf("%d", &n);
         while(1)
         {
@@ -350,13 +371,23 @@ void search(PASMS ph)
             scanf("%s", temp_1);
             search_1_supplier(ph, temp_1);
         }
+        else
+        {
+            printf("\033c");
+        }
     }   
-    else if(n==2)
+    else if(n==2)//3.3 这里有一个bug
     {
         //查尺码&款式
         printf("请输入尺码和款式：___________________\b\b\b\b\b\b\b\b\b");
-        scanf("%s %s", temp_1, temp_2);
+        //while((ch = getchar()) != '\n' && c != EOF);
+        scanf("%s%s", temp_1, temp_2);
+        //printf("不会吧不会吧，不会真有人在这卡住吧\n");
         search_2_size_style(ph, temp_1, temp_2);
+    }
+    else
+    {
+        printf("\033c");
     }
     return;
 }
@@ -364,7 +395,9 @@ void search(PASMS ph)
 void search_1_identifier(PASMS ph, char* identifier)
 {
     int i = 0;
+    char c;
     PASMS pc = ph->pNext;
+    printf("\033c");
     while(pc!=NULL)
     {
         if(strcmp(pc->identifier, identifier)==0)
@@ -375,18 +408,24 @@ void search_1_identifier(PASMS ph, char* identifier)
             }
             i++;
             printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
+            printf("输入任意键返回...");
+            while((c = getchar()) != '\n' && c != EOF);
+            getchar();
+            printf("\033c");
             return;
         }
         pc = pc->pNext;
     }
-    printf("无此服装数据！\n");
+    printf("——————————##########无此服装数据!##########——————————\n\n");
     return;
 }
 
 void search_1_name(PASMS ph, char* name)
 {
     int i = 0;
+    char c;
     PASMS pc = ph->pNext;
+    printf("\033c");
     while(pc!=NULL)
     {
         if(strcmp(pc->name, name)==0)
@@ -397,18 +436,24 @@ void search_1_name(PASMS ph, char* name)
             }
             i++;
             printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
+            printf("输入任意键返回...");
+            while((c = getchar()) != '\n' && c != EOF);
+            getchar();
+            printf("\033c");
             return;
         }
         pc = pc->pNext;
     }
-    printf("无此服装数据！\n");
+    printf("——————————##########无此服装数据!##########——————————\n\n");
     return;
 }
 
 void search_1_style(PASMS ph, char* style)
 {
     int i = 0;
+    char c;
     PASMS pc = ph->pNext;
+    printf("\033c");
     while(pc!=NULL)
     {
         if(strcmp(pc->style, style)==0)
@@ -419,20 +464,24 @@ void search_1_style(PASMS ph, char* style)
             }
             i++;
             printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
+            printf("输入任意键返回...");
+            while((c = getchar()) != '\n' && c != EOF);
+            getchar();
+            printf("\033c");
+            return;
         }
         pc = pc->pNext;
     }
-    if(i==0)
-    {
-        printf("无此服装数据！\n");
-    }
+    printf("——————————##########无此服装数据!##########——————————\n\n");
     return;
 }
 
 void search_1_supplier(PASMS ph, char* supplier)
 {
     int i = 0;
+    char c;
     PASMS pc = ph->pNext;
+    printf("\033c");
     while(pc!=NULL)
     {
         if(strcmp(pc->supplier, supplier)==0)
@@ -443,20 +492,25 @@ void search_1_supplier(PASMS ph, char* supplier)
             }
             i++;
             printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
+            printf("输入任意键返回...");
+            while((c = getchar()) != '\n' && c != EOF);
+            getchar();
+            printf("\033c");
+            return;
         }
         pc = pc->pNext;
     }
-    if(i==0)
-    {
-        printf("无此服装数据！\n");
-    }
+    printf("——————————##########无此服装数据!##########——————————\n\n");
     return;
 }
 
 void search_2_size_style(PASMS ph, char* size, char* style)
 {
+    //printf("这里是一个printf调试大法1\n");
     int i = 0;
+    char c;
     PASMS pc = ph->pNext;
+    printf("\033c");
     while (pc!=NULL)
     {
         if(strcmp(pc->size, size)==0&&strcmp(pc->style, style)==0)
@@ -468,18 +522,27 @@ void search_2_size_style(PASMS ph, char* size, char* style)
             i++;
             printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
         }
+        pc = pc->pNext;
     }
+    //printf("这里是一个printf调试大法2\n");
     if(i==0)
     {
-        printf("无此服装数据！\n");
+        printf("——————————##########无此服装数据!##########——————————\n\n");
+        return;
     }
+    printf("输入任意键返回...");
+    while((c = getchar()) != '\n' && c != EOF);
+    getchar();
+    printf("\033c");
     return;
 }
 
 void change(PASMS ph, char* identifier)
 {
     //先找到
+    char c;
     PASMS pc = ph->pNext;
+    printf("\033c");
     while(pc!=NULL)
     {
         if(strcmp(pc->identifier, identifier)==0)
@@ -490,12 +553,15 @@ void change(PASMS ph, char* identifier)
             printf("请输入修改后的数据：\n");
             printf("代码 品牌 名称 颜色 尺码 款式 供应商 面料 包装方式 库存数量\n");
             scanf("%s%s%s%s%s%s%s%s%s%s", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
-            printf("修改成功！\n");
+            printf("修改成功！输入任意键返回...\n");
+            while((c = getchar()) != '\n' && c != EOF);
+            getchar();
+            printf("\033c");
             return;
         }
         pc = pc->pNext;
     }
-    printf("无此服装数据！\n");
+    printf("——————————##########无此服装数据##########——————————\n\n");
     return;
 }
 
@@ -504,13 +570,14 @@ void delete_1(PASMS ph, char* identifier)
     PASMS pb, pf;
     pb = ph->pNext;
     pf = ph;
+    printf("\033c");
     while(pb!=NULL)
     {
         if(strcmp(pb->identifier,identifier)==0)
         {
             pb = pb->pNext;
             pf->pNext = pb;
-            printf("删除成功！\n");
+            printf("——————————##########删除成功!##########——————————\n\n");
             return;
         }
         else
@@ -519,7 +586,7 @@ void delete_1(PASMS ph, char* identifier)
             pf = pf->pNext;
         }
     }
-    printf("无此服装数据！\n");
+    printf("——————————##########无此服装数据!##########——————————\n\n");
     return;
 }
 
@@ -557,7 +624,6 @@ void List_BubbleSort_Rise(PASMS ph)
                 pb = pb->pNext;
             }
         }
-        printf("排序完成！\n");
         return;
     }
 }
@@ -596,7 +662,6 @@ void List_BubbleSort_Drop(PASMS ph)
                 pb = pb->pNext;
             }
         }
-        printf("排序完成！\n");
         return;
     }
     return;
@@ -614,20 +679,20 @@ int  List_Len(PASMS ph)
     return i;
 }
 
-int menu(FILE* fp)
+int menu(void)
 {
     int n, judge, c;
     do
     {
         printf("——————————##########服装销售管理系统##########——————————\n");
         printf("——————————##########服装销售管理系统##########——————————\n");
-        printf("——————————###欢迎使用服装销售管理系统，请先登录！###——————————\n");
+        printf("—————————###欢迎使用服装销售管理系统,请先登录!###——————————\n");
         printf("#菜单#\n");
         printf("1：登录\n");
         printf("2：注册\n");
         printf("0：退出\n");
         printf("****************************************************************\n");
-        printf("请输入您的操作！");
+        printf("请输入您的操作：___\b\b");
         while(1)
         {   
             judge = scanf("%d", &n);
@@ -635,36 +700,41 @@ int menu(FILE* fp)
             {
                 //清除缓冲区（fflush没用）
                 while((c = getchar()) != '\n' && c != EOF);
-                printf("输入格式错误！，请重新输入！\n");
+                printf("输入格式错误！，请重新输入：___\b\b");
             }
             else
             {
                 if(n!=1&&n!=2&&n!=0)
                 {
-                    printf("输入范围错误！，请重新输入！\n");
+                    printf("输入范围错误！，请重新输入！：___\b\b");
                 }
                 else
                 {
+                    //system("cls"); 
+                    //printf("\033c");//linux下的清屏
                     break;
                 }
             }
         }
         judge = 1;
+
         switch(n)
         {
             case(1):
             {
-                judge=sign_in(fp);
+                judge=sign_in();
                 break;
             }
             case(2):
             {
-                sign_up(fp);
+                sign_up();
                 judge = 0;
                 break;
             }
             default:
             {
+                printf("\033c");
+                printf("bye~");
                 return 0;//退出
             }
         }
@@ -672,8 +742,9 @@ int menu(FILE* fp)
     return 1;//登录成功
 }
 
-bool sign_in(FILE* fp)//登录
+bool sign_in(void)//登录
 {
+    FILE* fp = fopen("./21C课设/user.txt", "a+");
     char name[20], name_f[20];
     char password[20], password_f[20];
     printf("请输入用户名：\n");
@@ -689,23 +760,32 @@ bool sign_in(FILE* fp)//登录
         {
             if(strcmp(password, password_f)==0)
             {
-                printf("登录成功！\n");
+                fclose(fp);
                 return true;
             }
         }
     }
-    printf("登录失败！\n");
+    //printf("\033c");
+    printf("登录失败，将返回登录界面！\n");
+    fclose(fp);
     return false;
 }
 
-void sign_up(FILE* fp)//向文件末尾添加内容
+void sign_up(void)//向文件末尾添加内容
 {
+    char c;
+    FILE* fp = fopen("./21C课设/user.txt", "a+");
     char name[20], password[20];
     printf("请输入用户名：\n");
     scanf("%s", name);
     printf("请输入密码：\n");
     scanf("%s", password);
     fprintf(fp, " %s %s", name, password);
+    printf("添加账户成功！按任意键回到登录系统...\n");
+    while((c = getchar()) != '\n' && c != EOF);
+    getchar();
+    printf("\033c");
     //fflush(fp);
+    fclose(fp);
     return;
 }
