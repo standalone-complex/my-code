@@ -27,10 +27,17 @@ void search_1_name(PASMS, char*);
 void search_1_style(PASMS, char*);
 void search_1_supplier(PASMS, char*);
 void search_2_size_style(PASMS, char*, char*);
+void search_2_brand_supplier(PASMS, char*, char*);
 void change(PASMS, char*);
 void delete_1(PASMS, char*);
-void List_BubbleSort_Rise(PASMS);
-void List_BubbleSort_Drop(PASMS);
+void List_BubbleSort_Rise_1(PASMS);
+void List_BubbleSort_Drop_1(PASMS);
+void List_BubbleSort_Rise_2(PASMS);
+void List_BubbleSort_Drop_2(PASMS);
+void statistics();
+void statistic_1_1(PASMS);
+void statistic_1_2(PASMS);
+void statistic_2_1(PASMS);
 int List_Len(PASMS);
 int menu(void);
 bool sign_in(void);//登录
@@ -58,7 +65,7 @@ int main(int argc, char * argv[])
     //打开文件
     fp = fopen("./21C课设/data.txt", "a+");
     pHead = create_list(fp);
-    printf("1：录入\t\t2：排序\t\t3：遍历\n4：查询\t\t5：删除\t\t6：修改\n7：保存并结束\n\n请输入：___\b\b");//后期用函数替换
+    printf("1：录入\t\t2：排序\t\t3：遍历\t\t4：查询\n5：删除\t\t6：修改\t\t7：统计\t\t8：保存并退出\n请输入：___\b\b");//后期用函数替换
     while(1)
     {
         judge = scanf("%d", &n);
@@ -124,9 +131,7 @@ int main(int argc, char * argv[])
             }
             case(2):
             {
-                //按代码排序，实现顺序逆序两种功能
-                printf("1：升序\t\t2：降序\n其他数字返回\n请输入：___\b\b");
-                //scanf("%d", &n);
+                printf("1：代码排序\t\t2：库存数量排序\n其他数字返回\n请输入：___\b\b");
                 while(1)
                 {
                     judge = scanf("%d", &n);
@@ -143,15 +148,77 @@ int main(int argc, char * argv[])
                 }
                 if(n==1)
                 {
-                    List_BubbleSort_Rise(pHead);
-                    printf("\033c");
-                    printf("——————————##########排序完成!##########——————————\n\n");
+                    //按代码排序，实现顺序逆序两种功能
+                    printf("1：升序\t\t2：降序\n其他数字返回\n请输入：___\b\b");
+                    //scanf("%d", &n);
+                    while(1)
+                    {
+                        judge = scanf("%d", &n);
+                        if(judge!=1)
+                        {
+                            //清除缓冲区（fflush没用）
+                            while((c = getchar()) != '\n' && c != EOF);
+                            printf("输入格式错误！，请重新输入：___\b\b");
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    if(n==1)
+                    {
+                        List_BubbleSort_Rise_1(pHead);
+                        printf("\033c");
+                        printf("——————————##########排序完成!##########——————————\n\n");
+                    }
+                    else if(n==2)
+                    {
+                        List_BubbleSort_Drop_1(pHead);
+                        printf("\033c");
+                        printf("——————————##########排序完成!##########——————————\n\n");
+                    }
+                    else
+                    {
+                        printf("\033c");
+                    }
+                    break;
                 }
                 else if(n==2)
                 {
-                    List_BubbleSort_Drop(pHead);
-                    printf("\033c");
-                    printf("——————————##########排序完成!##########——————————\n\n");
+                    //按库存数量排序，实现顺序逆序两种功能
+                    printf("1：升序\t\t2：降序\n其他数字返回\n请输入：___\b\b");
+                    //scanf("%d", &n);
+                    while(1)
+                    {
+                        judge = scanf("%d", &n);
+                        if(judge!=1)
+                        {
+                            //清除缓冲区（fflush没用）
+                            while((c = getchar()) != '\n' && c != EOF);
+                            printf("输入格式错误！，请重新输入：___\b\b");
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    if(n==1)
+                    {
+                        List_BubbleSort_Rise_2(pHead);
+                        printf("\033c");
+                        printf("——————————##########排序完成!##########——————————\n\n");
+                    }
+                    else if(n==2)
+                    {
+                        List_BubbleSort_Drop_2(pHead);
+                        printf("\033c");
+                        printf("——————————##########排序完成!##########——————————\n\n");
+                    }
+                    else
+                    {
+                        printf("\033c");
+                    }
+                    break;
                 }
                 else
                 {
@@ -191,6 +258,11 @@ int main(int argc, char * argv[])
                 break;
             }
             case(7):
+            {
+                statistics();
+                break;
+            }
+            case(8):
             {
                 sentback(fp, pHead);//链表中存储的数据对文件数据进行替换
                 fclose(fp);
@@ -331,7 +403,7 @@ void search(PASMS ph)
     if(n==1)
     {
         //查代码，查品牌，查款式，查名称
-        printf("1：查代码\t\t2：查款式\n3：查名称\t\t4：查供应商\n其他数字退出\n请输入：___\b\b");
+        printf("1：查代码\t\t2：查款式\n3：查名称\t\t4：查供应商\n其他数字返回\n请输入：___\b\b");
         //scanf("%d", &n);
         while(1)
         {
@@ -379,11 +451,42 @@ void search(PASMS ph)
     else if(n==2)//3.3 这里有一个bug
     {
         //查尺码&款式
-        printf("请输入尺码和款式：___________________\b\b\b\b\b\b\b\b\b");
-        //while((ch = getchar()) != '\n' && c != EOF);
-        scanf("%s%s", temp_1, temp_2);
-        //printf("不会吧不会吧，不会真有人在这卡住吧\n");
-        search_2_size_style(ph, temp_1, temp_2);
+        printf("1：尺码&款式查询\t\t2：供应商&品牌查询\n其他数字退出\n请输入：___\b\b");
+        while(1)
+        {
+            judge = scanf("%d", &n);
+            if(judge!=1)
+            {
+                //清除缓冲区（fflush没用）
+                while((c = getchar()) != '\n' && c != EOF);
+                printf("输入格式错误！，请重新输入：___\b\b");
+            }
+            else
+            {
+                break;
+            }
+        }
+        if(n==1)
+        {
+            printf("请输入尺码和款式：___________________\b\b\b\b\b\b\b\b\b");
+            //while((ch = getchar()) != '\n' && c != EOF);
+            scanf("%s%s", temp_1, temp_2);
+            //printf("不会吧不会吧，不会真有人在这卡住吧\n");
+            search_2_size_style(ph, temp_1, temp_2);
+        }
+        else if(n==2)
+        {
+            printf("请输入品牌和供应商：___________________\b\b\b\b\b\b\b\b\b");
+            //while((ch = getchar()) != '\n' && c != EOF);
+            scanf("%s%s", temp_1, temp_2);
+            //printf("不会吧不会吧，不会真有人在这卡住吧\n");
+            search_2_brand_supplier(ph, temp_1, temp_2);
+        }
+        else
+        {
+            printf("\033c");
+        }
+        
     }
     else
     {
@@ -537,6 +640,39 @@ void search_2_size_style(PASMS ph, char* size, char* style)
     return;
 }
 
+void search_2_brand_supplier(PASMS ph, char* brand, char* supplier)
+{
+    //printf("这里是一个printf调试大法1\n");
+    int i = 0;
+    char c;
+    PASMS pc = ph->pNext;
+    printf("\033c");
+    while (pc!=NULL)
+    {
+        if(strcmp(pc->brand, brand)==0&&strcmp(pc->supplier, supplier)==0)
+        {
+            if(i==0)
+            {
+                printf("代码    品牌    名称    颜色    尺码    款式    供应商  面料    包装    库存数量\n");
+            }
+            i++;
+            printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
+        }
+        pc = pc->pNext;
+    }
+    //printf("这里是一个printf调试大法2\n");
+    if(i==0)
+    {
+        printf("——————————##########无此服装数据!##########——————————\n\n");
+        return;
+    }
+    printf("输入任意键返回...");
+    while((c = getchar()) != '\n' && c != EOF);
+    getchar();
+    printf("\033c");
+    return;
+}
+
 void change(PASMS ph, char* identifier)
 {
     //先找到
@@ -590,7 +726,84 @@ void delete_1(PASMS ph, char* identifier)
     return;
 }
 
-void List_BubbleSort_Rise(PASMS ph)
+void List_BubbleSort_Rise_1(PASMS ph)
+{
+    int len = List_Len(ph);
+    int loop_1, loop_2;
+    if(len<2)
+    {
+        printf("排序完成！\n");
+        return;
+    }
+    else
+    {
+        PASMS pf, pm, pb;
+        for(loop_1=0; loop_1<len-1; loop_1++)//这里的循环变量与链表无关
+        {
+            pf = ph;
+            pm = pf->pNext;
+            pb = pm->pNext;
+            for(loop_2=0; loop_2<len-1-loop_1; loop_2++)
+            {
+                if(strcmp(pm->identifier,pb->identifier)>0)//升序，
+                {
+                    //指针域交换
+                    pf->pNext = pm->pNext;
+                    pm->pNext = pb->pNext;
+                    pb->pNext =pm; 
+                    //数据域交换
+                    pm = pf->pNext;
+                    pb = pf->pNext->pNext;
+                }
+                pf = pf->pNext;
+                pm = pm->pNext;
+                pb = pb->pNext;
+            }
+        }
+        return;
+    }
+}
+
+void List_BubbleSort_Drop_1(PASMS ph)
+{
+    int len = List_Len(ph);
+    int loop_1, loop_2;
+    if(len<2)
+    {
+        printf("排序完成！\n");
+        return;
+    }
+    else
+    {
+        PASMS pf, pm, pb;
+        for(loop_1=0; loop_1<len-1; loop_1++)//这里的循环变量与链表无关
+        {
+            pf = ph;
+            pm = pf->pNext;
+            pb = pm->pNext;
+            for(loop_2=0; loop_2<len-1-loop_1; loop_2++)
+            {
+                if(strcmp(pm->identifier,pb->identifier)<0)//降序，
+                {
+                    //指针域交换(这三行用函数应该也行，属于指针操作，但接下来两行就不行了)
+                    pf->pNext = pm->pNext;
+                    pm->pNext = pb->pNext;
+                    pb->pNext =pm; 
+                    //数据域交换
+                    pm = pf->pNext;
+                    pb = pf->pNext->pNext;
+                }
+                pf = pf->pNext;
+                pm = pm->pNext;
+                pb = pb->pNext;
+            }
+        }
+        return;
+    }
+    return;
+}
+
+void List_BubbleSort_Rise_2(PASMS ph)
 {
     int len = List_Len(ph);
     int loop_1, loop_2;
@@ -628,7 +841,7 @@ void List_BubbleSort_Rise(PASMS ph)
     }
 }
 
-void List_BubbleSort_Drop(PASMS ph)
+void List_BubbleSort_Drop_2(PASMS ph)
 {
     int len = List_Len(ph);
     int loop_1, loop_2;
