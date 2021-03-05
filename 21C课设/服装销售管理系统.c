@@ -1191,7 +1191,7 @@ void statistic_brand_supplier(PASMS ph)
     }
     printf("\033c");
     pc_1 = ph_1->pNext;
-    printf("品牌   供应商         库存数量\n");
+    printf("品牌       供应商        库存数量\n");
     while(pc_1!=NULL)
     {
         printf("%s\t\t%s\t\t%d\n", pc_1->string_1, pc_1->string_2, pc_1->count);
