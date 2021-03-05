@@ -17,7 +17,23 @@ typedef struct ApparelSalesManagementSystem{
     struct ApparelSalesManagementSystem* pNext;
 }ASMS, *PASMS;
 
+typedef struct Statistic_Struct{
+    char string[20];
+    int count;
+    struct Statistic_Struct* pNext;
+}SS, *PSS;
+
+typedef struct Statistic_Struct_2{
+    char string_1[20];
+    char string_2[20];
+    int count;
+    struct Statistic_Struct_2* pNext;
+}SS_2, *PSS_2;
+
 PASMS create_list(FILE*);
+PSS get_statistic_data_style(PASMS);
+PSS get_statistic_data_material(PASMS);
+PSS_2 get_statistic_data_brand_supplier(PASMS);
 void add_list(PASMS);
 void traverse_list(PASMS);
 void sentback(FILE*, PASMS);
@@ -34,10 +50,10 @@ void List_BubbleSort_Rise_1(PASMS);
 void List_BubbleSort_Drop_1(PASMS);
 void List_BubbleSort_Rise_2(PASMS);
 void List_BubbleSort_Drop_2(PASMS);
-void statistics();
-void statistic_1_1(PASMS);
-void statistic_1_2(PASMS);
-void statistic_2_1(PASMS);
+void statistics(PASMS);
+void statistic_style(PASMS);
+void statistic_material(PASMS);
+void statistic_brand_supplier(PASMS);
 int List_Len(PASMS);
 int menu(void);
 bool sign_in(void);//登录
@@ -77,7 +93,7 @@ int main(int argc, char * argv[])
         }
         else
         {
-            if(n<=0||n>=8)
+            if(n<=0||n>=9)
             {
                 printf("输入范围错误！，请重新输入：___\b\b");
             }
@@ -259,7 +275,7 @@ int main(int argc, char * argv[])
             }
             case(7):
             {
-                statistics();
+                statistics(pHead);
                 break;
             }
             case(8):
@@ -274,7 +290,7 @@ int main(int argc, char * argv[])
         printf("——————————##########服装销售管理系统##########——————————\n");
         printf("——————————##########服装销售管理系统##########——————————\n");
         printf("——————————#####欢迎使用服装销售管理系统#####——————————\n");
-        printf("1：录入\t\t2：排序\t\t3：遍历\n4：查询\t\t5：删除\t\t6：修改\n7：保存并结束\n\n请输入：___\b\b");
+        printf("1：录入\t\t2：排序\t\t3：遍历\t\t4：查询\n5：删除\t\t6：修改\t\t7：统计\t\t8：保存并退出\n请输入：___\b\b");
         while(1)
         {   
             judge = scanf("%d", &n);
@@ -285,7 +301,7 @@ int main(int argc, char * argv[])
             }
             else
             {
-                if(n<=0||n>=8)
+                if(n<=0||n>=9)
                 {
                     printf("输入范围错误！，请重新输入：___\b\b");
                 }
@@ -384,7 +400,7 @@ void search(PASMS ph)
     char ch;
     char temp_1[20];
     char temp_2[20];
-    printf("1：单项查询\t\t2:混合查询\n其他数字退出\n请输入：___\b\b");
+    printf("1：单项查询\t\t2:混合查询\n其他数字返回\n请输入：___\b\b");
     //scanf("%d", &n);
     while(1)
     {
@@ -451,7 +467,7 @@ void search(PASMS ph)
     else if(n==2)//3.3 这里有一个bug
     {
         //查尺码&款式
-        printf("1：尺码&款式查询\t\t2：供应商&品牌查询\n其他数字退出\n请输入：___\b\b");
+        printf("1：尺码&款式查询\t\t2：供应商&品牌查询\n其他数字返回\n请输入：___\b\b");
         while(1)
         {
             judge = scanf("%d", &n);
@@ -732,7 +748,6 @@ void List_BubbleSort_Rise_1(PASMS ph)
     int loop_1, loop_2;
     if(len<2)
     {
-        printf("排序完成！\n");
         return;
     }
     else
@@ -770,7 +785,6 @@ void List_BubbleSort_Drop_1(PASMS ph)
     int loop_1, loop_2;
     if(len<2)
     {
-        printf("排序完成！\n");
         return;
     }
     else
@@ -809,7 +823,6 @@ void List_BubbleSort_Rise_2(PASMS ph)
     int loop_1, loop_2;
     if(len<2)
     {
-        printf("排序完成！\n");
         return;
     }
     else
@@ -847,7 +860,6 @@ void List_BubbleSort_Drop_2(PASMS ph)
     int loop_1, loop_2;
     if(len<2)
     {
-        printf("排序完成！\n");
         return;
     }
     else
@@ -978,8 +990,11 @@ bool sign_in(void)//登录
             }
         }
     }
-    //printf("\033c");
-    printf("登录失败，将返回登录界面！\n");
+    printf("\033c");
+    printf("登录失败，将返回登录界面！\n任意键继续...");
+    while((c = getchar()) != '\n' && c != EOF);
+    getchar();
+    printf("\033c");
     fclose(fp);
     return false;
 }
@@ -1001,4 +1016,305 @@ void sign_up(void)//向文件末尾添加内容
     //fflush(fp);
     fclose(fp);
     return;
+}
+
+void statistics(PASMS ph)
+{
+    int n, judge, c;
+    char ch;
+    char temp_1[20];
+    char temp_2[20];
+    printf("1：单项统计\t\t2:混合统计\n其他数字返回\n请输入：___\b\b");
+    //scanf("%d", &n);
+    while(1)
+    {
+        judge = scanf("%d", &n);
+        if(judge!=1)
+        {
+            //清除缓冲区（fflush没用）
+            while((c = getchar()) != '\n' && c != EOF);
+            printf("输入格式错误！，请重新输入：___\b\b");
+        }
+        else
+        {
+            break;
+        }
+    }
+    if(n==1)
+    {  
+        printf("1：统计款式\t\t2：统计面料\n其他数字返回\n请输入：___\b\b");
+        while(1)
+        {
+            judge = scanf("%d", &n);
+            if(judge!=1)
+            {
+                //清除缓冲区（fflush没用）
+                while((c = getchar()) != '\n' && c != EOF);
+                printf("输入格式错误！，请重新输入：___\b\b");
+            }
+            else
+            {
+                break;
+            }
+        }
+        if(n==1)
+        {
+            statistic_style(ph);
+        }
+        else if(n==2)
+        {
+            statistic_material(ph);
+        }
+        else
+        {
+            printf("\033c");
+        }
+    }
+    else if(n==2)
+    {
+        statistic_brand_supplier(ph);
+    }
+    else
+    {
+        printf("\033c");
+    }
+    return;
+}
+
+void statistic_style(PASMS ph)//面料和这个一样
+{
+    int c;
+    if(ph->pNext==NULL)
+    {
+        printf("\033c");
+        printf("——————————#####无服装数据!#####——————————\n");
+        return;
+    }
+    PSS ph_1 = get_statistic_data_style(ph);//得到不重复的所有类型   
+    PASMS pc = ph->pNext;
+    PSS pc_1;
+    while(pc!=NULL)
+    {
+        pc_1 = ph_1->pNext;
+        while(pc_1!=NULL)
+        {
+            if(strcmp(pc_1->string,pc->style)==0)
+            {
+                pc_1->count++;
+                break;
+            }
+            pc_1 = pc_1->pNext;
+        }
+        pc = pc->pNext;
+    }
+    printf("\033c");
+    pc_1 = ph_1->pNext;
+    printf("款式            库存数量\n");
+    while(pc_1!=NULL)
+    {
+        printf("%s\t\t%d\n", pc_1->string, pc_1->count);
+        pc_1 = pc_1->pNext;
+    }
+    printf("输入任意键返回...");
+    while((c = getchar()) != '\n' && c != EOF);
+    getchar();
+    printf("\033c");
+    return;
+}
+
+void statistic_material(PASMS ph)//面料和这个一样
+{
+    int c;
+    if(ph->pNext==NULL)
+    {
+        printf("\033c");
+        printf("——————————#####无服装数据!#####——————————\n");
+        return;
+    }
+    PSS ph_1 = get_statistic_data_material(ph);//得到不重复的所有类型   
+    PASMS pc = ph->pNext;
+    PSS pc_1;
+    while(pc!=NULL)
+    {
+        pc_1 = ph_1->pNext;
+        while(pc_1!=NULL)
+        {
+            if(strcmp(pc_1->string,pc->material)==0)
+            {
+                pc_1->count++;
+                break;
+            }
+            pc_1 = pc_1->pNext;
+        }
+        pc = pc->pNext;
+    }
+    printf("\033c");
+    pc_1 = ph_1->pNext;
+    printf("面料            库存数量\n");
+    while(pc_1!=NULL)
+    {
+        printf("%s\t\t%d\n", pc_1->string, pc_1->count);
+        pc_1 = pc_1->pNext;
+    }
+    printf("输入任意键返回...");
+    while((c = getchar()) != '\n' && c != EOF);
+    getchar();
+    printf("\033c");
+    return;
+}
+
+void statistic_brand_supplier(PASMS ph)
+{
+    int c;
+    if(ph->pNext==NULL)
+    {
+        printf("\033c");
+        printf("——————————#####无服装数据!#####——————————\n");
+        return;
+    }
+    PSS_2 ph_1 = get_statistic_data_brand_supplier(ph);//得到不重复的所有类型   
+    PASMS pc = ph->pNext;
+    PSS_2 pc_1;
+    while(pc!=NULL)
+    {
+        pc_1 = ph_1->pNext;
+        while(pc_1!=NULL)
+        {
+            if(strcmp(pc_1->string_1, pc->brand)==0&&strcmp(pc_1->string_2, pc->supplier)==0)
+            {
+                pc_1->count++;
+                break;
+            }
+            pc_1 = pc_1->pNext;
+        }
+        pc = pc->pNext;
+    }
+    printf("\033c");
+    pc_1 = ph_1->pNext;
+    printf("品牌   供应商         库存数量\n");
+    while(pc_1!=NULL)
+    {
+        printf("%s\t\t%s\t\t%d\n", pc_1->string_1, pc_1->string_2, pc_1->count);
+        pc_1 = pc_1->pNext;
+    }
+    printf("输入任意键返回...");
+    while((c = getchar()) != '\n' && c != EOF);
+    getchar();
+    printf("\033c");
+    return;
+}
+
+PSS get_statistic_data_style(PASMS ph)
+{
+    PSS ph_1 = (PSS)malloc(sizeof(SS));
+    if(ph_1==NULL)
+    {
+        exit(-1);
+    }
+    ph_1->pNext = NULL;
+    PSS pNew;
+    PSS pc_1 = ph_1->pNext;
+    PASMS pc = ph->pNext;
+    int i;
+    while(pc!=NULL)
+    {
+        i = 0;
+        while(pc_1!=NULL)
+        {
+            if(strcmp(pc->style, pc_1->string)==0)//如果有相同的
+            {
+                i = 1;
+                break;
+            }
+            pc_1 = pc_1->pNext;
+        }
+        if(i==0)
+        {
+            pNew = (PSS)malloc(sizeof(SS));
+            pNew->count = 0;
+            strcpy(pNew->string, pc->style);
+            //头插
+            pNew->pNext = ph_1->pNext;
+            ph_1->pNext = pNew;
+        }
+        pc = pc->pNext;
+    }
+    return ph_1;
+}
+
+PSS get_statistic_data_material(PASMS ph)
+{
+    PSS ph_1 = (PSS)malloc(sizeof(SS));
+    if(ph_1==NULL)
+    {
+        exit(-1);
+    }
+    ph_1->pNext = NULL;
+    PSS pNew;
+    PSS pc_1 = ph_1->pNext;
+    PASMS pc = ph->pNext;
+    int i;
+    while(pc!=NULL)
+    {
+        i = 0;
+        while(pc_1!=NULL)
+        {
+            if(strcmp(pc->material, pc_1->string)==0)//如果有相同的
+            {
+                i = 1;
+                break;
+            }
+            pc_1 = pc_1->pNext;
+        }
+        if(i==0)
+        {
+            pNew = (PSS)malloc(sizeof(SS));
+            pNew->count = 0;
+            strcpy(pNew->string, pc->material);
+            //头插
+            pNew->pNext = ph_1->pNext;
+            ph_1->pNext = pNew;
+        }
+        pc = pc->pNext;
+    }
+    return ph_1;
+}
+
+PSS_2 get_statistic_data_brand_supplier(PASMS ph)
+{
+    PSS_2 ph_1 = (PSS_2)malloc(sizeof(SS_2));
+    if(ph_1==NULL)
+    {
+        exit(-1);
+    }
+    ph_1->pNext = NULL;
+    PSS_2 pNew;
+    PSS_2 pc_1 = ph_1->pNext;
+    PASMS pc = ph->pNext;
+    int i;
+    while(pc!=NULL)
+    {
+        i = 0;
+        while(pc_1!=NULL)
+        {
+            if(strcmp(pc->brand, pc_1->string_1)==0&&strcmp(pc->supplier, pc_1->string_2)==0)//如果有相同的
+            {
+                i = 1;
+                break;
+            }
+            pc_1 = pc_1->pNext;
+        }
+        if(i==0)
+        {
+            pNew = (PSS_2)malloc(sizeof(SS_2));
+            pNew->count = 0;
+            strcpy(pNew->string_1, pc->brand);
+            strcpy(pNew->string_2, pc->supplier);
+            //头插
+            pNew->pNext = ph_1->pNext;
+            ph_1->pNext = pNew;
+        }
+        pc = pc->pNext;
+    }
+    return ph_1;
 }
