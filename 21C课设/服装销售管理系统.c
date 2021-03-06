@@ -296,7 +296,7 @@ int main(int argc, char * argv[])
             judge = scanf("%d", &n);
             if(judge!=1)
             {
-                fflush(stdin);
+                while((c = getchar()) != '\n' && c != EOF);
                 printf("输入格式错误！，请重新输入：___\b\b");
             }
             else
