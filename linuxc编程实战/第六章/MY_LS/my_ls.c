@@ -31,26 +31,27 @@ int g_maxlen;
 int main(int argc, char * argv[])
 {
     //先对输入的数据进行处理
-    int i, j;//循环变量
-    int num;//判断输入了几个'-'，用于判断命令行输入字符串数量，可以判断出是否输入路径，若无输入路径默认按当前目录遍历
+    int i, j, k;//循环变量
+    int num = 0;//判断输入了几个'-'，用于判断命令行输入字符串数量，可以判断出是否输入路径，若无输入路径默认按当前目录遍历
     int flag_param = NONE;//需要输入函数来判断的变量
     char param[32];//存参数的字符串
     //char pathname[64];//存路径的字符串 真的需要吗？
     struct stat buf;//存目录文件数据的缓冲区
     //解析命令行
+    k = 0;
     for(i=1; i<argc; i++)
     {
         //如果是参数
         if(argv[i][0]=='-')
         {
-            for(j=1; j<strlen(argv[i]); j++)
+            for(j=1; j<strlen(argv[i]); j++, k++)
             {   
-                param[j-1] = argv[i][j];
+                param[k] = argv[i][j];
             }
             num++;
         }
     }
-    param[j] = '\0';
+    param[k] = '\0';
     //把解析好的参数转化为宏定义的整形
     flag_param = transform(param);
     //如果命令行没有输入路径，默认路径为当前目录直接遍历
@@ -75,6 +76,12 @@ int main(int argc, char * argv[])
         //如果是目录
         if(S_ISDIR(buf.st_mode))
         {
+            //判断路径名带不带`/`，不带就加上
+            if(argv[i][strlen(argv[i])-1]!= '/')
+            {
+                argv[i][strlen(argv[i])] = '/';
+                argv[i][strlen(argv[i])+1] = '\0';
+            }
             display_dir(argv[i], flag_param);
         }
         //如果是文件
@@ -110,10 +117,12 @@ int transform(const char* flag_c)
             case 'a':
             {
                 flag_d |= A;
+                break;
             }
             case 'l':
             {
                 flag_d |= L;//芜湖，位运算！
+                break;
             }
             default:
             {
@@ -167,8 +176,7 @@ void display_dir(const char * pathname, int flag)
         }
         //接下来先把路径放入字符串中,用strncpy比较安全
         strncpy(filename[i], pathname, len);
-        filename[i][len] = '/';
-        filename[i][len+1] = '\0';
+        filename[i][len] = '\0';
         //然后字符串连接,使用strcat;
         strcat(filename[i], ptr->d_name);
         //再加个\0
@@ -206,7 +214,7 @@ void display(const char* pathname, int flag)//基本单位
     //解析文件名
     for(i=0, j=0; i<strlen(pathname); i++)
     {
-        if(pathname[i]!= '/')
+        if(pathname[i] != '/')
         {
             name[j] = pathname[i];
             j++;
@@ -217,7 +225,7 @@ void display(const char* pathname, int flag)//基本单位
         } 
     }
     name[j] = '\0';
-
+    //printf("%s\n", name);
     if(lstat(pathname, &buf) == -1)
     {
         my_error("lstat", __LINE__);
@@ -242,11 +250,13 @@ void display(const char* pathname, int flag)//基本单位
             if(name[0] != '.')
             {
                 display_attribute(buf, name);
+                printf("%s\n", name);
             }
         }
         case A+L:
         {
             display_attribute(buf, name);
+            printf("%s\n", name);
         }
         default:
         {
@@ -264,5 +274,122 @@ void display_single(const char* name)
 
 void display_attribute(struct stat buf, const char* name)
 {
+    char buf_time[32];
+    //现在接收的数据有，文件信息和文件名
+    
+    //先打印文件类型
+    if(S_ISLNK(buf.st_mode))
+    {
+        printf("l");
+    }
+    else if(S_ISREG(buf.st_mode))
+    {
+        printf("-");
+    }
+    else if(S_ISDIR(buf.st_mode))
+    {
+        printf("d");
+    }
+    else if(S_ISCHR(buf.st_mode))
+    {
+        printf("c");
+    }
+    else if(S_ISBLK(buf.st_mode))
+    {
+        printf("b");
+    }
+    else if(S_ISFIFO(buf.st_mode))
+    {
+        printf("f");
+    }
+    else if(S_ISSOCK(buf.st_mode))
+    {
+        printf("s");
+    }
+    //依次打印拥有者用户组其他用户权限
+    if(buf.st_mode & S_IRUSR)
+    {
+        printf("r");
+    }
+    else
+    {
+        printf("-");
+    }
+    if(buf.st_mode & S_IWUSR)
+    {
+        printf("w");
+    }
+    else
+    {
+        printf("-");
+    }
+    if(buf.st_mode & S_IXUSR)
+    {
+        printf("x");
+    }
+    else
+    {
+        printf("-");
+    }
+
+    if(buf.st_mode & S_IRGRP)
+    {
+        printf("r");
+    }
+    else
+    {
+        printf("-");
+    }
+    if(buf.st_mode & S_IWGRP)
+    {
+        printf("w");
+    }
+    else
+    {
+        printf("-");
+    }
+    if(buf.st_mode & S_IXGRP)
+    {
+        printf("x");
+    }
+    else
+    {
+        printf("-");
+    }
+
+    if(buf.st_mode & S_IROTH)
+    {
+        printf("r");
+    }
+    else
+    {
+        printf("-");
+    }
+    if(buf.st_mode & S_IWOTH)
+    {
+        printf("w");
+    }
+    else
+    {
+        printf("-");
+    }
+    if(buf.st_mode & S_IXOTH)
+    {
+        printf("x");
+    }
+    else
+    {
+        printf("-");
+    }
+
+    //打印文件所属用户和用户组,因为buf的是uid和gid所以需要调用函数转换下
+    printf("%4ld%-8s%-8s", buf.st_nlink, getpwuid(buf.st_uid)->pw_name, getgrgid(buf.st_gid)->gr_name);
+    //打印文件大小
+    printf("%6ld", buf.st_size);
+    //打印日期
+    strcpy(buf_time, ctime(&buf.st_mtim.tv_sec));
+    buf_time[strlen(buf_time) - 1] = '\0';
+    printf("%s", buf_time);
+    //打印时间
     return;
 }
