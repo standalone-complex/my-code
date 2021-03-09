@@ -47,10 +47,10 @@ int main(int argc, char * argv[])
     return 0;
 }
 
-void my_err(const char* funame, int line)
+void my_err(const char* pathname, int line)
 {
     fprintf(stderr, "line:%d\n", line);
-    perror(funame);
+    perror(pathname);
     exit(-1);
 }
 
