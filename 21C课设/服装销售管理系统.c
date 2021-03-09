@@ -136,7 +136,7 @@ int main(int argc, char * argv[])
                 {   
                     if(loop_1==0)
                     {
-                        printf("代码 品牌 名称 颜色 尺码 款式 供应商 面料 包装方式 库存数量\n");
+                        printf("代码         品牌         名称         颜色     尺码    款式      供应商       面料   包装     库存数量\n");
                     }
                     add_list(pHead);
                     printf("\n");
@@ -355,7 +355,7 @@ void traverse_list(PASMS ph)
     {
         if(i==0)
         {
-            printf("代码    品牌    名称    颜色    尺码    款式    供应商  面料    包装    库存数量\n");
+            printf("代码         品牌         名称         颜色     尺码    款式      供应商       面料   包装     库存数量\n");
         }
         printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
         i++;
@@ -523,7 +523,7 @@ void search_1_identifier(PASMS ph, char* identifier)
         {
             if(i==0)
             {
-                printf("代码    品牌    名称    颜色    尺码    款式    供应商  面料    包装    库存数量\n");
+                printf("代码         品牌         名称         颜色     尺码    款式      供应商       面料   包装     库存数量\n");
             }
             i++;
             printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
@@ -551,7 +551,7 @@ void search_1_name(PASMS ph, char* name)
         {
             if(i==0)
             {
-                printf("代码    品牌    名称    颜色    尺码    款式    供应商  面料    包装    库存数量\n");
+                printf("代码         品牌         名称         颜色     尺码    款式      供应商       面料   包装     库存数量\n");
             }
             i++;
             printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
@@ -579,7 +579,7 @@ void search_1_style(PASMS ph, char* style)
         {
             if(i==0)
             {
-                printf("代码    品牌    名称    颜色    尺码    款式    供应商  面料    包装    库存数量\n");
+                printf("代码         品牌         名称         颜色     尺码    款式      供应商       面料   包装     库存数量\n");
             }
             i++;
             printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
@@ -607,7 +607,7 @@ void search_1_supplier(PASMS ph, char* supplier)
         {
             if(i==0)
             {
-                printf("代码    品牌    名称    颜色    尺码    款式    供应商  面料    包装    库存数量\n");
+                printf("代码         品牌         名称         颜色     尺码    款式      供应商       面料   包装     库存数量\n");
             }
             i++;
             printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
@@ -636,7 +636,7 @@ void search_2_size_style(PASMS ph, char* size, char* style)
         {
             if(i==0)
             {
-                printf("代码    品牌    名称    颜色    尺码    款式    供应商  面料    包装    库存数量\n");
+                printf("代码         品牌         名称         颜色     尺码    款式      供应商       面料   包装     库存数量\n");
             }
             i++;
             printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
@@ -669,7 +669,7 @@ void search_2_brand_supplier(PASMS ph, char* brand, char* supplier)
         {
             if(i==0)
             {
-                printf("代码    品牌    名称    颜色    尺码    款式    供应商  面料    包装    库存数量\n");
+                printf("代码         品牌         名称         颜色     尺码    款式      供应商       面料   包装     库存数量\n");
             }
             i++;
             printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
@@ -700,10 +700,10 @@ void change(PASMS ph, char* identifier)
         if(strcmp(pc->identifier, identifier)==0)
         {
             printf("原数据为：\n");
-            printf("代码    品牌    名称    颜色    尺码    款式    供应商  面料    包装    库存数量\n");
+            printf("代码         品牌         名称         颜色     尺码    款式      供应商       面料   包装     库存数量\n");
             printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
             printf("请输入修改后的数据：\n");
-            printf("代码 品牌 名称 颜色 尺码 款式 供应商 面料 包装方式 库存数量\n");
+            printf("代码         品牌         名称         颜色     尺码    款式      供应商       面料   包装     库存数量\n");
             scanf("%s%s%s%s%s%s%s%s%s%s", pc->identifier, pc->brand, pc->name, pc->color, pc->size, pc->style, pc->supplier, pc->material, pc->package, pc->amount);
             printf("修改成功！输入任意键返回...\n");
             while((c = getchar()) != '\n' && c != EOF);

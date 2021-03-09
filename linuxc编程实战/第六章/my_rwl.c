@@ -8,7 +8,7 @@
 #include <errno.h>
 
 void my_err(const char*, int);
-int my_read(int fd);
+int my_read(int);
 
 int main(int argc, char * argv[])
 {
@@ -47,10 +47,10 @@ int main(int argc, char * argv[])
     return 0;
 }
 
-void my_err(const char* pathname, int line)
+void my_err(const char* funame, int line)
 {
     fprintf(stderr, "line:%d\n", line);
-    perror(pathname);
+    perror(funame);
     exit(-1);
 }
 
