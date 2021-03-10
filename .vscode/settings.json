@@ -5,6 +5,7 @@
         "dirent.h": "c",
         "types.h": "c",
         "stdio.h": "c",
-        "stat.h": "c"
+        "stat.h": "c",
+        "limits.h": "c"
     }
 }

@@ -11,7 +11,7 @@
             //"program": "${workspaceFolder}/a.out",  //解释一下, ${workspaceFolder}是当前文件空间的相对路径 a.out是目标文件
                                                       //a.out我们完全可以修改,我们就修改成 ${fileBasenameNoExtension}.out
 
-            "program": "${workspaceFolder}/${fileBasenameNoExtension}.out",
+            "program": "${workspaceFolder}/out/${fileBasenameNoExtension}.out",
                                                       //至于 workspaceFolder fileBasenameNoExtension见名思意
                                                       //另外关于.json中的各种替换变量的意思详见下面这位大神的文章:
                                                       //https://blog.csdn.net/bat67/article/details/78302870

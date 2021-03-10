@@ -14,6 +14,7 @@
 void my_error(const char*, int);
 void display(const char*, int);
 void display_dir(const char*, int);
+void display_dir_recurrence(const char*, int);
 void display_single(const char*);
 void display_attribute(struct stat, const char*);
 int transform(const char*);
@@ -23,6 +24,7 @@ int my_cmp(const void*, const void*);
 #define NONE 0
 #define A 1
 #define L 2
+#define R 4
 
 int g_leave_len = MAXROWLEN;
 int g_maxlen;
@@ -82,7 +84,17 @@ int main(int argc, char * argv[])
                 argv[i][strlen(argv[i])] = '/';
                 argv[i][strlen(argv[i])+1] = '\0';
             }
-            display_dir(argv[i], flag_param);
+            //在这里做个判断，如果有R就跑另一个函数
+            if(flag_param&R==0)
+            {
+                display_dir(argv[i], flag_param);
+            }
+            else
+            {
+                //把R位置0
+                flag_param &= R;
+                display_dir_recurrences(argv[i], flag_param);
+            }
         }
         //如果是文件
         else
@@ -122,6 +134,11 @@ int transform(const char* flag_c)
             case 'l':
             {
                 flag_d |= L;//芜湖，位运算！
+                break;
+            }
+            case 'r':
+            {
+                flag_d |= R;
                 break;
             }
             default:
@@ -225,7 +242,6 @@ void display(const char* pathname, int flag)//基本单位
         } 
     }
     name[j] = '\0';
-    //printf("%s\n", name);
     if(lstat(pathname, &buf) == -1)
     {
         my_error("lstat", __LINE__);
@@ -268,7 +284,7 @@ void display(const char* pathname, int flag)//基本单位
 
 void display_single(const char* name)
 {
-    printf("%s\n", name);
+    printf("%s ", name);
     return;
 }
 
@@ -391,5 +407,11 @@ void display_attribute(struct stat buf, const char* name)
     buf_time[strlen(buf_time) - 1] = '\0';
     printf("%s", buf_time);
     //打印时间
+    return;
+}
+
+void display_dir_recurrence(const char* pathname, int flag)
+{
+    
     return;
 }
