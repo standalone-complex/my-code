@@ -19,6 +19,7 @@ void display_single(const char*);
 void display_attribute(struct stat, const char*);
 int transform(const char*);
 int my_cmp(const void*, const void*);
+char* name(const char*);
 
 #define MAXROWLEN 80
 #define NONE 0
@@ -59,7 +60,18 @@ int main(int argc, char * argv[])
     //如果命令行没有输入路径，默认路径为当前目录直接遍历
     if((num + 1) == argc)
     {
-        display_dir("./", flag_param);
+        //如果没R
+        if((flag_param & R) == 0)//这里要注意宏展开的问题，记得带上括号
+            {
+                display_dir("./", flag_param);
+            }
+            //如果有R
+            else
+            {
+                //把R位置0
+                flag_param -= R;
+                display_dir_recurrence("./", flag_param);
+            }
         return 0;
     }
     //开始遍历命令行，把符合条件的路径和参数输入遍历函数
@@ -93,7 +105,7 @@ int main(int argc, char * argv[])
             {
                 //把R位置0
                 flag_param &= R;
-                display_dir_recurrences(argv[i], flag_param);
+                display_dir_recurrence(argv[i], flag_param);
             }
         }
         //如果是文件
@@ -136,7 +148,7 @@ int transform(const char* flag_c)
                 flag_d |= L;//芜湖，位运算！
                 break;
             }
-            case 'r':
+            case 'R':
             {
                 flag_d |= R;
                 break;
@@ -202,7 +214,6 @@ void display_dir(const char * pathname, int flag)
     }
     //排个序
     qsort(filename, count, PATH_MAX+1, my_cmp);
-
     //好了，可以整了
     for(i=0; i<count; i++)
     {
@@ -225,23 +236,8 @@ void display(const char* pathname, int flag)//基本单位
     //对了，发来的是路径，得先获得文件名
     //从pathname中获得，使用lstat函数
     //struct stat* buf;
-    int i, j;//循环变量
     struct stat buf;//不能像上面那样写，不然内存会因为函数的结束被释放掉
-    char name[NAME_MAX+1];
-    //解析文件名
-    for(i=0, j=0; i<strlen(pathname); i++)
-    {
-        if(pathname[i] != '/')
-        {
-            name[j] = pathname[i];
-            j++;
-        }
-        else
-        {
-            j = 0;
-        } 
-    }
-    name[j] = '\0';
+    char* name_1 = name(pathname);//解析文件名函数
     if(lstat(pathname, &buf) == -1)
     {
         my_error("lstat", __LINE__);
@@ -250,29 +246,29 @@ void display(const char* pathname, int flag)//基本单位
     {
         case NONE:
         {
-            if(name[0] != '.')
+            if(name_1[0] != '.')
             {
-                display_single(name);
+                display_single(name_1);
             }
             break;
         }
         case A:
         {
-            display_single(name);
+            display_single(name_1);
             break;
         }
         case L:
         {
-            if(name[0] != '.')
+            if(name_1[0] != '.')
             {
-                display_attribute(buf, name);
-                printf("%s\n", name);
+                display_attribute(buf, name_1);
+                printf("%s\n", name_1);
             }
         }
         case A+L:
         {
-            display_attribute(buf, name);
-            printf("%s\n", name);
+            display_attribute(buf, name_1);
+            printf("%s\n", name_1);
         }
         default:
         {
@@ -412,6 +408,150 @@ void display_attribute(struct stat buf, const char* name)
 
 void display_dir_recurrence(const char* pathname, int flag)
 {
+    int i, j;//循环变量
+    int len = strlen(pathname);//获取路径长度，待会连接路径用
+    int count = 0;//统计目录下有多少文件，排序用，调用display函数也用
+    //二维数组，其实就是256个字符串
+    char pathname_recur[256][PATH_MAX+1] = {0};
+    char filename[256][PATH_MAX+1], temp[PATH_MAX+1];//加一难道是为了加\0吗
+    DIR* dir;
+    struct dirent* ptr;
+    struct stat buf;
+    if((dir = opendir(pathname)) == NULL)
+    {
+        my_error("opendir", __LINE__);
+    }
+    //这个循环有两个作用，获得目录下文件名最大字节长度，统计目录下有文件的数量，方便排序
+    while((ptr = readdir(dir)) != NULL)
+    {
+        //先获得数量，然后排序，再输出
+        if(g_maxlen<strlen(ptr->d_name))
+        {
+            g_maxlen = strlen(ptr->d_name);
+        }
+        count++;
+    }
+    closedir(dir);//这里用rewinddir应该也行
+    //判断文件数量是否超限
+    if(count>256)
+    {
+        my_error("too many files under this dir", __LINE__);
+    }
+    //再次打开目录流
+    if((dir = opendir(pathname)) == NULL)
+    {
+        my_error("opendir", __LINE__);
+    }
+    //然后将数据存储到字符串中，进行排序，排序完成后遍历调用display函数
+    for(i=0; i<count; i++)
+    {
+        if((ptr = readdir(dir)) == NULL)
+        {
+            my_error("readdir", __LINE__);
+        }
+        //接下来先把路径放入字符串中,用strncpy比较安全
+        strncpy(filename[i], pathname, len);
+        filename[i][len] = '\0';
+        //然后字符串连接,使用strcat;
+        strcat(filename[i], ptr->d_name);
+        //再加个\0
+        filename[i][len+strlen(ptr->d_name)] = '\0';
+        //好了
+    }
+    //排个序
+    qsort(filename, count, PATH_MAX+1, my_cmp);
+    //好了，可以整了
+    //打印当前目录名
+    printf("%s\n", pathname);
+    for(i=0, j=0; i<count; i++)
+    {
+        
+        //如果是目录,小心，需要忽略.和..的影响
+        if(lstat(filename[i], &buf) == -1)
+        {
+            my_error("lstat", __LINE__);
+        }
+        if((S_ISDIR(buf.st_mode))&&(i>2))
+        {
+            /* switch (flag)
+            {
+                case NONE:
+                {
+                    if((name(filename[i]))[0]!='.')
+                    {
+                        strcpy(pathname_recur[j], filename[i]);
+                        j++;
+                    }
+                    break;
+                }
+                case A:
+                {
+                    strcpy(pathname_recur[j], filename[i]);
+                    j++;
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            } */
+            if((flag&A)==1)
+            {
+                strcpy(pathname_recur[j], filename[i]);
+                j++;
+            }
+            else
+            {
+                if((name(filename[i]))[0]!='.')
+                {
+                    strcpy(pathname_recur[j], filename[i]);
+                    j++;
+                }
+            }
+        }
+        display(filename[i], flag);
+    }
+    //其实这个closedir在可以放到上面那个循环之前
+    closedir(dir);
+    //按位与 如果没有-l参数，打印换行符
+    //为啥？？？
+    if((flag & L) == 0)
+    {
+        printf("\n");
+    }
+    //给目录字符串数组每个字符串最后加/
+    for(i=0; i<j; i++)
+    {
+        pathname_recur[i][strlen(pathname_recur[i])] = '/';
+    }
+    //递归调用
     
+    for(i=0; i<j; i++)
+    {
+        //printf("%s\n", pathname_recur[i]);
+        display_dir_recurrence(pathname_recur[i], flag);
+    }
     return;
+}
+
+char * name(const char * pathname)
+{
+    int i, j;//循环变量
+    //char name[NAME_MAX+1];
+    char* name = (char*)malloc(NAME_MAX+1);
+    //解析文件名
+    for(i=0, j=0; i<strlen(pathname); i++)
+    {
+        if(pathname[i] != '/')
+        {
+            name[j] = pathname[i];
+            j++;
+        }
+        else
+        {
+            j = 0;
+        } 
+    }
+    name[j] = '\0';
+    return name;
 }
