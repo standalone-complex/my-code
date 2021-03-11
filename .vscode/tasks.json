@@ -14,7 +14,7 @@
                 "-g",
                 "${file}",
                 "-o",
-                "./out/${fileBasenameNoExtension}.out"
+                "./out/${fileBasenameNoExtension}"
             ]
         }
     ]
